@@ -2094,6 +2094,10 @@ const UICtrl = (function () {
     // Footer Elements
     contactButton: findElement('#foot-contact'),
     footerSVGS: findElement('.footer-svgs'),
+    
+    // Text Elements
+    textInput: findElement('#text-input'),
+    textPreview: findElement('.the-preview'),
   }
 
   return {
@@ -2156,6 +2160,28 @@ const App = (function (UICtrl, APICtrl, GlobalCtrl, SpecialCtrl, WebSocketCtrl, 
 
     })
 
+    UICtrl.UIVars.textInput.addEventListener('input', e => {
+
+      let text = e.target.value
+
+      text = text.replaceAll('(`+bo+`)', '<strong>')
+      text = text.replaceAll('(`-bo-`)', '</strong>')
+
+      text = text.replaceAll('(`+it+`)', '<em>')
+      text = text.replaceAll('(`-it-`)', '</em>')
+
+      text = text.replaceAll('(`+mo+`)', '<div style="font-family: "Courier New", Courier, monospace;">')
+      text = text.replaceAll('(`-mo-`)', '</div>')
+
+      text = text.replaceAll('(`+ud+`)', '<div style="text-decoration: underline;">')
+      text = text.replaceAll('(`-ud-`)', '</div>')
+
+      text = text.replaceAll('(`+st+`)', '<div style="text-decoration: line-through;">')
+      text = text.replaceAll('(`-st-`)', '</div>')
+
+      UICtrl.UIVars.textPreview.innerHTML = text
+
+    })
   }
 
   const firstInit = function () {

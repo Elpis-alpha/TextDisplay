@@ -684,3 +684,8 @@ input.send-preview:hover{
 div.preview-text{
   padding-bottom: 1rem;
 }
+
+div.preview-text > div.the-preview{
+  white-space: pre-wrap;
+  
+}
