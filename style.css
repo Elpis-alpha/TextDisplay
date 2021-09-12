@@ -263,8 +263,8 @@ div.x-message-holder.show{
 
 div.normal-message-holder div.normal-message,
 div.x-message-holder div.x-message{
-  background-color: rgb(165, 22, 122);
-  color: white;
+  background-color: rgb(175, 175, 175);
+  color: black;
   fill: red;
   display: flex;
   padding:  .3rem .5rem;
@@ -274,7 +274,7 @@ div.x-message-holder div.x-message{
   font-family: 'Poor Richard';
   font-size: .8rem;
   overflow: auto;
-  box-shadow: 0 0 5px 1px black;
+  box-shadow: 0 0 5px 1px rgb(39, 39, 39);
   word-break: break-word;
 }
 
@@ -645,6 +645,7 @@ div.form-for-display form div.always{
 }
 
 div.form-for-display form div.always button{
+  cursor: pointer;
   outline: 0 none;
   border: 1px solid black;
   padding: .1rem .5rem;
@@ -687,5 +688,62 @@ div.preview-text{
 
 div.preview-text > div.the-preview{
   white-space: pre-wrap;
-  
+}
+
+div.preview-text > div.the-preview blockquote{
+  text-align: left;
+  opacity: .7;
+  border-left: 3px solid grey;
+  display: block;
+  padding-left: .5rem;
+  font-style: italic;
+}
+
+div.preview-text > div.the-preview code{
+  font-family: 'Courier New', Courier, monospace;
+  color: white;
+  text-align: left;
+  display: block;
+  background-color: rgb(53, 53, 53);
+  padding: .5rem;
+}
+
+div.x-message-holder div.x-message .message-context form.image-form{
+  text-align: center;
+  font-weight: bold;
+}
+
+div.x-message-holder div.x-message .message-context form.image-form div{
+  padding-top: .5rem;
+}
+
+div.x-message-holder div.x-message .message-context form.image-form input[type="submit"]{
+  margin: .5rem;
+  border: 1px solid black;
+  outline: 0;
+  background-color: transparent;
+  border-radius: .5rem;
+  padding: 0 .5rem;
+  cursor: pointer;
+  transition: border .5s, box-shadow .5s;
+}
+
+div.x-message-holder div.x-message .message-context form.image-form input[type="submit"]:hover{
+  border: 1px solid transparent;
+  box-shadow: 0 0 1px 1px black;
+}
+
+div.x-message-holder div.x-message .message-context form.image-form div label{
+  padding-right: .5rem;
+}
+
+div.x-message-holder div.x-message .message-context form.image-form input[type="number"]{
+  padding-right: .5rem;
+  height: 1.5rem;
+  padding: 0 .3rem;
+  width: 4rem;
+  outline: 0;
+  background-color: transparent;
+  border: 0;
+  border-bottom: 1px solid black;
 }

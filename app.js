@@ -1356,6 +1356,26 @@ const SpecialCtrl = (function () {
 
   }
 
+  const imageify = (text) => {
+
+    var imageRegex = /(\(`\+img\+`\))(.*?)(\(`\-img\-`\))/ig
+
+    return text.replace(imageRegex, function (url) {
+
+      url = url.replaceAll(/(\(`\+img\+`\))/ig, '')
+      url = url.replaceAll(/(\(`\-img\-`\))/ig, '')
+
+      const num = url.search(/(\b(https?|ftp|file):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/ig)
+      const num2 = url.search(/,/)
+
+      console.log(url.slice(num));
+
+      return '<img style="width: '+ url.slice(0, num2) +'%" src="' + url.slice(num - 5) + '">'
+
+    })
+
+  }
+
   const replaceAsync = async (str, regex, asyncFn) => {
 
     const promises = [];
@@ -1441,6 +1461,48 @@ const SpecialCtrl = (function () {
 
   }
 
+  const insertAtCursor = (myField, myValue) => {
+
+    //IE support
+
+    if (document.selection) {
+
+      myField.focus();
+
+      sel = document.selection.createRange();
+
+      sel.text = myValue;
+
+    }
+
+    //MOZILLA and others
+
+    else if (myField.selectionStart || myField.selectionStart == '0') {
+
+      var startPos = myField.selectionStart;
+
+      var endPos = myField.selectionEnd;
+
+      myField.value = myField.value.substring(0, startPos)
+
+        + myValue
+
+        + myField.value.substring(endPos, myField.value.length);
+
+      myField.focus()
+
+      myField.selectionStart = startPos + myValue.length;
+
+      myField.selectionEnd = startPos + myValue.length;
+
+    } else {
+
+      myField.value += myValue;
+
+    }
+
+  }
+
   return {
     randomAmong: (num1, num2) => randomAmong(num1, num2),
 
@@ -1452,9 +1514,13 @@ const SpecialCtrl = (function () {
 
     urlify: (text) => urlify(text),
 
+    imageify: (text) => imageify(text),
+
     copyText: (text) => copyText(text),
 
     getUsername: (text) => getUsername(text),
+
+    insertAtCursor: (myField, myValue) => insertAtCursor(myField, myValue),
 
     replaceAsync: (str, regex, asyncFn) => (str, regex, asyncFn),
 
@@ -2094,10 +2160,23 @@ const UICtrl = (function () {
     // Footer Elements
     contactButton: findElement('#foot-contact'),
     footerSVGS: findElement('.footer-svgs'),
-    
+
     // Text Elements
     textInput: findElement('#text-input'),
     textPreview: findElement('.the-preview'),
+    formBold: findElement('.form-bold'),
+    formItalic: findElement('.form-italic'),
+    formMono: findElement('.form-mono'),
+    formUnder: findElement('.form-under'),
+    formStrike: findElement('.form-strike'),
+    formList: findElement('.form-list'),
+    formBlock: findElement('.form-block'),
+    formCode: findElement('.form-code'),
+    formImage: findElement('.form-image'),
+
+    backgroundColor: findElement('#form-background-color'),
+    textColor: findElement('#form-text-color'),
+    showOther: findElement('#show-other'),
   }
 
   return {
@@ -2160,9 +2239,397 @@ const App = (function (UICtrl, APICtrl, GlobalCtrl, SpecialCtrl, WebSocketCtrl, 
 
     })
 
-    UICtrl.UIVars.textInput.addEventListener('input', e => {
+    UICtrl.UIVars.backgroundColor.addEventListener('input', () => {
 
-      let text = e.target.value
+      UICtrl.UIVars.backgroundColor.parentElement.style.backgroundColor = UICtrl.UIVars.backgroundColor.value
+
+    })
+
+    UICtrl.UIVars.textColor.addEventListener('input', () => {
+
+      UICtrl.UIVars.textColor.parentElement.style.backgroundColor = UICtrl.UIVars.textColor.value
+
+    })
+
+    UICtrl.UIVars.showOther.addEventListener('click', (e) => {
+
+      e.preventDefault()
+
+      UICtrl.toggleClass(UICtrl.UIVars.showOther.parentElement.nextElementSibling, 'show')
+
+    })
+
+    UICtrl.UIVars.formBold.addEventListener('click', e => {
+
+      if (e.target.nodeName == 'svg' || e.target.nodeName == 'path') {
+
+        MessageCtrl.sendNormalMessage('Use this button to make a text bold')
+
+      } else {
+
+        const textArea = UICtrl.UIVars.textInput
+
+        let phrase = 'Your Bold Text Here'
+
+        if (textArea.selectionStart != textArea.selectionEnd) {
+
+          phrase = textArea.value.slice(textArea.selectionStart, textArea.selectionEnd)
+
+        }
+
+        phrase = '(`+bo+`)' + phrase + '(`-bo-`)'
+
+        SpecialCtrl.insertAtCursor(textArea, phrase)
+
+        const pos = textArea.selectionStart
+
+        textArea.setSelectionRange(pos - phrase.length + 8, pos - 8)
+
+        parseText()
+
+        MessageCtrl.sendMiniMessage('Added Bold Effect', 1000)
+
+      }
+
+    })
+
+    UICtrl.UIVars.formItalic.addEventListener('click', e => {
+
+      if (e.target.nodeName == 'svg' || e.target.nodeName == 'path') {
+
+        MessageCtrl.sendNormalMessage('Use this button to make a text italics')
+
+      } else {
+
+        const textArea = UICtrl.UIVars.textInput
+
+        let phrase = 'Your Italic Text Here'
+
+        if (textArea.selectionStart != textArea.selectionEnd) {
+
+          phrase = textArea.value.slice(textArea.selectionStart, textArea.selectionEnd)
+
+        }
+
+        phrase = '(`+it+`)' + phrase + '(`-it-`)'
+
+        SpecialCtrl.insertAtCursor(textArea, phrase)
+
+        const pos = textArea.selectionStart
+
+        textArea.setSelectionRange(pos - phrase.length + 8, pos - 8)
+
+        parseText()
+
+        MessageCtrl.sendMiniMessage('Added Italic Effect', 1000)
+
+      }
+
+    })
+
+    UICtrl.UIVars.formMono.addEventListener('click', e => {
+
+      if (e.target.nodeName == 'svg' || e.target.nodeName == 'path') {
+
+        MessageCtrl.sendNormalMessage('Use this button to give a text a Monospace font')
+
+      } else {
+
+        const textArea = UICtrl.UIVars.textInput
+
+        let phrase = 'Your Text Here'
+
+        if (textArea.selectionStart != textArea.selectionEnd) {
+
+          phrase = textArea.value.slice(textArea.selectionStart, textArea.selectionEnd)
+
+        }
+
+        phrase = '(`+mo+`)' + phrase + '(`-mo-`)'
+
+        SpecialCtrl.insertAtCursor(textArea, phrase)
+
+        const pos = textArea.selectionStart
+
+        textArea.setSelectionRange(pos - phrase.length + 8, pos - 8)
+
+        parseText()
+
+        MessageCtrl.sendMiniMessage('Added Monospace Effect', 1000)
+
+      }
+
+    })
+
+    UICtrl.UIVars.formUnder.addEventListener('click', e => {
+
+      if (e.target.nodeName == 'svg' || e.target.nodeName == 'path') {
+
+        MessageCtrl.sendNormalMessage('Use this button to place an underline beneath a text')
+
+      } else {
+
+        const textArea = UICtrl.UIVars.textInput
+
+        let phrase = 'Your Text Here'
+
+        if (textArea.selectionStart != textArea.selectionEnd) {
+
+          phrase = textArea.value.slice(textArea.selectionStart, textArea.selectionEnd)
+
+        }
+
+        phrase = '(`+un+`)' + phrase + '(`-un-`)'
+
+        SpecialCtrl.insertAtCursor(textArea, phrase)
+
+        const pos = textArea.selectionStart
+
+        textArea.setSelectionRange(pos - phrase.length + 8, pos - 8)
+
+        parseText()
+
+        MessageCtrl.sendMiniMessage('Added Underline Effect', 1000)
+
+      }
+
+    })
+
+    UICtrl.UIVars.formStrike.addEventListener('click', e => {
+
+      if (e.target.nodeName == 'svg' || e.target.nodeName == 'path') {
+
+        MessageCtrl.sendNormalMessage('Use this button to strike through characters')
+
+      } else {
+
+        const textArea = UICtrl.UIVars.textInput
+
+        let phrase = 'Your Text Here'
+
+        if (textArea.selectionStart != textArea.selectionEnd) {
+
+          phrase = textArea.value.slice(textArea.selectionStart, textArea.selectionEnd)
+
+        }
+
+        phrase = '(`+st+`)' + phrase + '(`-st-`)'
+
+        SpecialCtrl.insertAtCursor(textArea, phrase)
+
+        const pos = textArea.selectionStart
+
+        textArea.setSelectionRange(pos - phrase.length + 8, pos - 8)
+
+        parseText()
+
+        MessageCtrl.sendMiniMessage('Added Strikethrough Effect', 1000)
+
+      }
+
+    })
+
+    UICtrl.UIVars.formBlock.addEventListener('click', e => {
+
+      if (e.target.nodeName == 'svg' || e.target.nodeName == 'path') {
+
+        MessageCtrl.sendNormalMessage('Use this button to add blockquotes')
+
+      } else {
+
+        const textArea = UICtrl.UIVars.textInput
+
+        let phrase = 'Your Text Here'
+
+        if (textArea.selectionStart != textArea.selectionEnd) {
+
+          phrase = textArea.value.slice(textArea.selectionStart, textArea.selectionEnd)
+
+        }
+
+        phrase = '(`+bq+`)' + phrase + '(`-bq-`)'
+
+        SpecialCtrl.insertAtCursor(textArea, phrase)
+
+        const pos = textArea.selectionStart
+
+        textArea.setSelectionRange(pos - phrase.length + 8, pos - 8)
+
+        parseText()
+
+        MessageCtrl.sendMiniMessage('Added Blockquote Effect', 1000)
+
+      }
+
+    })
+
+    UICtrl.UIVars.formCode.addEventListener('click', e => {
+
+      if (e.target.nodeName == 'svg' || e.target.nodeName == 'path') {
+
+        MessageCtrl.sendNormalMessage('Use this button to add code')
+
+      } else {
+
+        const textArea = UICtrl.UIVars.textInput
+
+        let phrase = 'Your Code Here'
+
+        if (textArea.selectionStart != textArea.selectionEnd) {
+
+          phrase = textArea.value.slice(textArea.selectionStart, textArea.selectionEnd)
+
+        }
+
+        phrase = '(`+cd+`)' + phrase + '(`-cd-`)'
+
+        SpecialCtrl.insertAtCursor(textArea, phrase)
+
+        const pos = textArea.selectionStart
+
+        textArea.setSelectionRange(pos - phrase.length + 8, pos - 8)
+
+        parseText()
+
+        MessageCtrl.sendMiniMessage('Added Code Effect', 1000)
+
+      }
+
+    })
+
+    UICtrl.UIVars.formList.addEventListener('click', e => {
+
+      if (e.target.nodeName == 'svg' || e.target.nodeName == 'path') {
+
+        MessageCtrl.sendNormalMessage('Use this button to add list bullet')
+
+      } else {
+
+        const textArea = UICtrl.UIVars.textInput
+
+        let phrase = 'Your List Item Here'
+
+        if (textArea.selectionStart != textArea.selectionEnd) {
+
+          phrase = textArea.value.slice(textArea.selectionStart, textArea.selectionEnd)
+
+        }
+
+        phrase = '(`+li+`)' + phrase + '(`-li-`)'
+
+        SpecialCtrl.insertAtCursor(textArea, phrase)
+
+        const pos = textArea.selectionStart
+
+        textArea.setSelectionRange(pos - phrase.length + 8, pos - 8)
+
+        parseText()
+
+        MessageCtrl.sendMiniMessage('Added List Effect', 1000)
+
+      }
+
+    })
+
+    UICtrl.UIVars.formImage.addEventListener('click', e => {
+
+      if (e.target.nodeName == 'svg' || e.target.nodeName == 'path') {
+
+        MessageCtrl.sendNormalMessage('Use this button to add an image')
+
+      } else {
+
+        const textArea = UICtrl.UIVars.textInput
+
+        const form = document.createElement('form')
+
+        UICtrl.addClass(form, 'image-form')
+
+        form.appendChild(document.createTextNode('Place your image below'))
+
+        const imageDiv = document.createElement('div')
+
+        const image = document.createElement('input')
+
+        image.type = 'file'
+
+        imageDiv.appendChild(image)
+
+        form.appendChild(imageDiv)
+
+        const widthDiv = document.createElement('div')
+
+        const widthLabel = document.createElement('label')
+
+        widthLabel.innerText = 'Width (%):'
+
+        const width = document.createElement('input')
+
+        width.type = 'number'
+
+        width.value = 100
+
+        widthDiv.appendChild(widthLabel)
+
+        widthDiv.appendChild(width)
+
+        const submit = document.createElement('input')
+
+        submit.type = 'submit'
+
+        submit.value = 'Add Image'
+
+        form.appendChild(widthDiv)
+
+        form.appendChild(submit)
+
+        form.addEventListener('submit', e => {
+
+          e.preventDefault()
+
+          const [imgitem] = image.files
+
+          if (imgitem) {
+
+            const imgURL = URL.createObjectURL(imgitem)
+
+            console.log(imgURL);
+
+            let phrase = width.value + ',' + imgURL
+
+            phrase = '(`+img+`)' + phrase + '(`-img-`)'
+
+            SpecialCtrl.insertAtCursor(textArea, phrase)
+
+            parseText()
+
+            MessageCtrl.sendMiniMessage('Image Added', 1000)
+
+            MessageCtrl.removeXMessage()
+
+          } else {
+
+            MessageCtrl.removeXMessage()
+
+            MessageCtrl.sendMiniMessage('No Image Added', 1000)
+
+          }
+
+        })
+
+        MessageCtrl.sendXMessage(form)
+
+      }
+
+    })
+
+    UICtrl.UIVars.textInput.addEventListener('input', () => parseText())
+
+
+
+    const parseText = e => {
+
+      let text = UICtrl.UIVars.textInput.value
 
       text = text.replaceAll('(`+bo+`)', '<strong>')
       text = text.replaceAll('(`-bo-`)', '</strong>')
@@ -2170,21 +2637,34 @@ const App = (function (UICtrl, APICtrl, GlobalCtrl, SpecialCtrl, WebSocketCtrl, 
       text = text.replaceAll('(`+it+`)', '<em>')
       text = text.replaceAll('(`-it-`)', '</em>')
 
-      text = text.replaceAll('(`+mo+`)', '<div style="font-family: "Courier New", Courier, monospace;">')
-      text = text.replaceAll('(`-mo-`)', '</div>')
+      text = text.replaceAll('(`+mo+`)', '<span style="font-family: \'Courier New\', Courier, monospace;">')
+      text = text.replaceAll('(`-mo-`)', '</span>')
 
-      text = text.replaceAll('(`+ud+`)', '<div style="text-decoration: underline;">')
-      text = text.replaceAll('(`-ud-`)', '</div>')
+      text = text.replaceAll('(`+un+`)', '<span style="text-decoration: underline;">')
+      text = text.replaceAll('(`-un-`)', '</span>')
 
-      text = text.replaceAll('(`+st+`)', '<div style="text-decoration: line-through;">')
-      text = text.replaceAll('(`-st-`)', '</div>')
+      text = text.replaceAll('(`+st+`)', '<span style="text-decoration: line-through;">')
+      text = text.replaceAll('(`-st-`)', '</span>')
 
-      UICtrl.UIVars.textPreview.innerHTML = text
+      text = text.replaceAll('(`+bq+`)', '<blockquote class="prev-blockquotes">')
+      text = text.replaceAll('(`-bq-`)', '</blockquote>')
 
-    })
+      text = text.replaceAll('(`+cd+`)', '<code class="prev-code">')
+      text = text.replaceAll('(`-cd-`)', '</code>')
+
+      text = text.replaceAll('(`+li+`)', '<ul><li>')
+      text = text.replaceAll('(`-li-`)', '</li></ul>')
+
+      UICtrl.UIVars.textPreview.innerHTML = SpecialCtrl.imageify(text)
+
+    }
   }
 
   const firstInit = function () {
+
+    UICtrl.UIVars.textColor.parentElement.style.backgroundColor = UICtrl.UIVars.textColor.value
+
+    UICtrl.UIVars.backgroundColor.parentElement.style.backgroundColor = UICtrl.UIVars.backgroundColor.value
 
   }
 
