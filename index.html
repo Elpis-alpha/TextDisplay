@@ -136,11 +136,16 @@
 
             <div class="form-element">
 
-              <label for="font-type">Font:</label>
+              <label for="font-type" class="small-label">Font:</label>
 
               <select name="" id="">
-                <option value="saf">fas</option>
-                <option value="saffeds">sfdfs</option>
+                <option value="saf">Old English</option>
+                <option value="saf">Harrington</option>
+                <option value="saf">Gothic</option>
+                <option value="saf">Cambria</option>
+                <option value="saf">Times New Roman</option>
+                <option value="saf">Gothic</option>
+                <option value="saffeds">Poor Richard</option>
                 <option value="saffeds">Use Google Font</option>
                 <option value="saffeds">Upload your font</option>
               </select>
@@ -149,35 +154,96 @@
 
             <div class="form-element">
 
-              <label for="background-color">Background Color:</label>
+              <label for="form-background-color" class="small-label">Background Color:</label>
 
-              <input type="color" value="#ffffff">
-
-            </div>
-
-            <div class="form-element">
-
-              <label for="font-size">Font Size:</label>
-
-              <input type="number" name="" id="">
+              <div class="back-col">
+                <input id="form-background-color" type="color" value="#ffffff">
+              </div>
 
             </div>
 
             <div class="form-element">
 
-              <label>Other Settings</label>
+              <label for="form-font-size" class="small-label">Font Size:</label>
 
-              <div class="other-settings">I have other-settings: Line height, text align, text color</div>
+              <input type="number" id="form-font-size" value="1">
 
             </div>
 
-            <div class="form-element">
+            <div class="form-element other-holder">
 
-              <input type="submit" value="View Text">
+              <div class="always">
+
+                <label class="small-label">Other Settings</label>
+
+                <button id="show-other">Show</button>
+
+              </div>
+
+              <div class="other-settings">
+
+                <div class="form-element">
+
+                  <label for="form-lineheight" class="small-label">Line Height:</label>
+
+                  <input type="number" id="form-lineheight" value="1.6">
+
+                </div>
+
+                <div class="form-element">
+
+                  <label for="form-lineheight" class="small-label">Width(%):</label>
+
+                  <input type="number" id="form-lineheight" value="80">
+
+                </div>
+
+                <div class="form-element">
+
+                  <label for="form-text-color" class="small-label">Text Color:</label>
+
+                  <div class="back-col">
+                    <input id="form-text-color" type="color" value="#000000">
+                  </div>
+
+                </div>
+
+                <div class="form-element">
+
+                  <label for="form-text-align" class="small-label">Font:</label>
+
+                  <select name="" id="form-text-align">
+                    <option value="Left">Left</option>
+                    <option value="Right">Right</option>
+                    <option selected value="Center">Center</option>
+                    <option value="Justify">Justify</option>
+                  </select>
+
+                </div>
+
+              </div>
+
+            </div>
+
+            <div class="form-element submit">
+
+              <input type="submit" class="send-preview" value="View Text">
 
             </div>
 
           </form>
+
+        </div>
+
+        <div class="horizon-divider"></div>
+
+        <div class="preview-text">
+
+          <div class="label">Preview Text</div>
+
+          <div class="the-preview">
+            This is the text you typed...
+          </div>
 
         </div>
 

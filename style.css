@@ -553,7 +553,12 @@ div.form-for-display form div.form-element{
   padding-bottom: .5rem;
 }
 
-div.form-for-display form label.label{
+div.form-for-display form div.form-element.other-holder{
+  background-color: rgb(232, 232, 232);
+  padding: .3rem 1.5rem;
+}
+
+.label{
   width: 100%;
   display: block;
   text-align: center;
@@ -575,7 +580,7 @@ div.form-for-display form textarea{
 }
 
 div.form-for-display form textarea:focus{
-  box-shadow: 0 0 5px 2px black;
+  box-shadow: 0 0 4px 1px black;
 }
 
 div.form-for-display form div.special-additions{
@@ -606,4 +611,76 @@ div.form-for-display form div.special-additions div.addition{
 div.form-for-display form div.special-additions div.addition:hover{
   box-shadow: 0 0 3px 1px black;
   background-color: rgb(150, 150, 150);
+}
+
+div.form-for-display form label.small-label{
+  font-weight: bold;
+}
+
+div.form-for-display form input[type="number"]{
+  height: 1.5rem;
+  padding: 0 .3rem;
+  width: 3rem;
+}
+
+div.form-for-display form input[type="color"]{
+  border: 0 none;
+  outline: 0 none;
+  height: 1.6rem;
+  opacity: 0;
+}
+
+div.form-for-display form div.back-col{
+  border: 0 none;
+  outline: 0 none;
+  height: 1.6rem;
+  display: inline;
+  border: 1px solid black;
+}
+
+div.form-for-display form div.always{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+div.form-for-display form div.always button{
+  outline: 0 none;
+  border: 1px solid black;
+  padding: .1rem .5rem;
+  background-color: rgb(191, 191, 191);
+}
+
+div.other-settings{
+  display: none;
+}
+
+div.other-settings.show{
+  display: block;
+}
+
+div.form-element.submit{
+  margin-top: .5rem;
+  margin-bottom: .5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+input.send-preview{
+  background-color: rgb(230, 230, 230);
+  border: 1px solid black;
+  border-radius: .5rem;
+  min-width: 80%;
+  transition: border .5s, box-shadow .5s;
+  cursor: pointer;
+}
+
+input.send-preview:hover{
+  border: 1px solid rgb(230, 230, 230);
+  box-shadow: 0 0 2px 1px black;  
+}
+
+div.preview-text{
+  padding-bottom: 1rem;
 }
