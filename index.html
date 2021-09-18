@@ -54,7 +54,7 @@
 
                 <div class="addition form-bold">
 
-                  Bold
+                  <strong>B</strong>
 
                   <i class="js-question"></i>
 
@@ -63,7 +63,7 @@
 
                 <div class="addition form-italic">
 
-                  Italic
+                  <em>I</em>
 
                   <i class="js-question"></i>
 
@@ -72,16 +72,15 @@
 
                 <div class="addition form-mono">
 
-                  Monospace
+                  <code>M</code>
 
                   <i class="js-question"></i>
 
                 </div>
 
-
                 <div class="addition form-under">
 
-                  Underline
+                  <div style="text-decoration: underline;">U</div>
 
                   <i class="js-question"></i>
 
@@ -90,7 +89,7 @@
 
                 <div class="addition form-strike">
 
-                  Strikethrough
+                  <div style="text-decoration: line-through;">St</div>
 
                   <i class="js-question"></i>
 
@@ -98,7 +97,7 @@
 
                 <div class="addition form-list">
 
-                  List
+                  Li
 
                   <i class="js-question"></i>
 
@@ -106,7 +105,7 @@
 
                 <div class="addition form-block">
 
-                  Blockquote
+                  Bq
 
                   <i class="js-question"></i>
 
@@ -114,7 +113,11 @@
 
                 <div class="addition form-code">
 
-                  Code
+                  <div style="font-family: 'Courier New', Courier, monospace;">
+
+                    &lt;c&gt;
+
+                  </div>
 
                   <i class="js-question"></i>
 
@@ -122,9 +125,9 @@
 
                 <div class="addition form-image">
 
-                  Image
+                  Ig
 
-                  <i class="js-question"></i>
+                  <i class="js-image"></i>
 
                 </div>
 
@@ -138,16 +141,16 @@
 
               <label for="font-type" class="small-label">Font:</label>
 
-              <select name="" id="">
-                <option value="saf">Old English</option>
-                <option value="saf">Harrington</option>
-                <option value="saf">Gothic</option>
-                <option value="saf">Cambria</option>
-                <option value="saf">Times New Roman</option>
-                <option value="saf">Gothic</option>
-                <option value="saffeds">Poor Richard</option>
-                <option value="saffeds">Use Google Font</option>
-                <option value="saffeds">Upload your font</option>
+              <select name="" id="form-font-type" data-fontLink="">
+                <option value="OldE">Old English</option>
+                <option value="Harrington">Harrington</option>
+                <option value="Gothic">Gothic</option>
+                <option value="Cambria">Cambria</option>
+                <option value="Times">Times New Roman</option>
+                <option value="Gothic">Gothic</option>
+                <option value="PoorR">Poor Richard</option>
+                <option value="Google">Use Google Font</option>
+                <option value="Upload">Upload your font</option>
               </select>
 
             </div>

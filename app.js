@@ -1370,7 +1370,7 @@ const SpecialCtrl = (function () {
 
       console.log(url.slice(num));
 
-      return '<img style="width: '+ url.slice(0, num2) +'%" src="' + url.slice(num - 5) + '">'
+      return '<img style="width: ' + url.slice(0, num2) + '%" src="' + url.slice(num - 5) + '">'
 
     })
 
@@ -1984,6 +1984,8 @@ const UICtrl = (function () {
         findElements('.js-users'),
 
         findElements('.js-paper-plane'),
+
+        findElements('.js-image'),
       ]
 
     } else {
@@ -2130,6 +2132,10 @@ const UICtrl = (function () {
         const elementa = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path d="M476 3.2L12.5 270.6c-18.1 10.4-15.8 35.6 2.2 43.2L121 358.4l287.3-253.2c5.5-4.9 13.3 2.6 8.6 8.3L176 407v80.5c0 23.6 28.5 32.9 42.5 15.8L282 426l124.6 52.2c14.2 6 30.4-2.9 33-18.2l72-432C515 7.8 493.3-6.8 476 3.2z"/></svg>`;
         element.innerHTML = elementa
       }
+      else if (element.classList.contains('js-image')) {
+        const elementa = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path d="M464 448H48c-26.51 0-48-21.49-48-48V112c0-26.51 21.49-48 48-48h416c26.51 0 48 21.49 48 48v288c0 26.51-21.49 48-48 48zM112 120c-30.928 0-56 25.072-56 56s25.072 56 56 56 56-25.072 56-56-25.072-56-56-56zM64 384h384V272l-87.515-87.515c-4.686-4.686-12.284-4.686-16.971 0L208 320l-55.515-55.515c-4.686-4.686-12.284-4.686-16.971 0L64 336v48z"/></svg>`;
+        element.innerHTML = elementa
+      }
     }
 
   }
@@ -2177,6 +2183,8 @@ const UICtrl = (function () {
     backgroundColor: findElement('#form-background-color'),
     textColor: findElement('#form-text-color'),
     showOther: findElement('#show-other'),
+    fontType: findElement('#form-font-type'),
+    lineHeight: findElement('#form-lineheight'),
   }
 
   return {
@@ -2243,11 +2251,129 @@ const App = (function (UICtrl, APICtrl, GlobalCtrl, SpecialCtrl, WebSocketCtrl, 
 
       UICtrl.UIVars.backgroundColor.parentElement.style.backgroundColor = UICtrl.UIVars.backgroundColor.value
 
+      parseText()
+
+    })
+
+    UICtrl.UIVars.fontType.addEventListener('input', e => {
+
+      if (e.target.value == 'Google') {
+
+        const form = document.createElement('form')
+
+        UICtrl.addClass(form, 'image-form')
+
+        form.appendChild(document.createTextNode('Place the link for the font below'))
+
+        const fontDiv = document.createElement('div')
+
+        UICtrl.addClass(fontDiv, 'font-div')
+
+        const font = document.createElement('input')
+
+        font.type = 'text'
+
+        fontDiv.appendChild(font)
+
+        form.appendChild(fontDiv)
+
+        const submit = document.createElement('input')
+
+        submit.type = 'submit'
+
+        submit.value = 'Set Font'
+
+        form.appendChild(submit)
+
+        form.addEventListener('submit', e => {
+
+          e.preventDefault()
+
+          UICtrl.UIVars.fontType.dataset.fontlink = font.value
+
+          MessageCtrl.sendMiniMessage('Font Changed', 1000)
+
+          MessageCtrl.removeXMessage()
+
+          parseText()
+
+        })
+
+        MessageCtrl.sendXMessage(form)
+
+      } else if (e.target.value == 'Upload') {
+
+        const form = document.createElement('form')
+
+        UICtrl.addClass(form, 'image-form')
+
+        form.appendChild(document.createTextNode('Place the font below'))
+
+        const fontDiv = document.createElement('div')
+
+        UICtrl.addClass(fontDiv, 'fontu-div')
+
+        const font = document.createElement('input')
+
+        font.type = 'file'
+
+        fontDiv.appendChild(font)
+
+        form.appendChild(fontDiv)
+
+        const submit = document.createElement('input')
+
+        submit.type = 'submit'
+
+        submit.value = 'Set Font'
+
+        form.appendChild(submit)
+
+        form.addEventListener('submit', e => {
+
+          e.preventDefault()
+
+          const [fontitem] = font.files
+
+          if (fontitem) {
+
+            const fontURL = URL.createObjectURL(fontitem)
+
+            console.log(fontURL);
+
+            UICtrl.UIVars.fontType.dataset.fontlink = fontURL
+
+            MessageCtrl.sendMiniMessage('Font Changed', 1000)
+
+            MessageCtrl.removeXMessage()
+
+            parseText()
+
+          } else {
+
+            MessageCtrl.removeXMessage()
+
+            MessageCtrl.sendMiniMessage('No Font Changed', 1000)
+
+          }
+
+        })
+
+        MessageCtrl.sendXMessage(form)
+
+      } else {
+
+        parseText()
+
+      }
+
     })
 
     UICtrl.UIVars.textColor.addEventListener('input', () => {
 
       UICtrl.UIVars.textColor.parentElement.style.backgroundColor = UICtrl.UIVars.textColor.value
+
+      parseText()
 
     })
 
@@ -2256,6 +2382,14 @@ const App = (function (UICtrl, APICtrl, GlobalCtrl, SpecialCtrl, WebSocketCtrl, 
       e.preventDefault()
 
       UICtrl.toggleClass(UICtrl.UIVars.showOther.parentElement.nextElementSibling, 'show')
+
+      parseText()
+
+    })
+
+    UICtrl.UIVars.lineHeight.addEventListener('input', (e) => {
+
+      parseText()
 
     })
 
@@ -2626,7 +2760,6 @@ const App = (function (UICtrl, APICtrl, GlobalCtrl, SpecialCtrl, WebSocketCtrl, 
     UICtrl.UIVars.textInput.addEventListener('input', () => parseText())
 
 
-
     const parseText = e => {
 
       let text = UICtrl.UIVars.textInput.value
@@ -2655,9 +2788,26 @@ const App = (function (UICtrl, APICtrl, GlobalCtrl, SpecialCtrl, WebSocketCtrl, 
       text = text.replaceAll('(`+li+`)', '<ul><li>')
       text = text.replaceAll('(`-li-`)', '</li></ul>')
 
-      UICtrl.UIVars.textPreview.innerHTML = SpecialCtrl.imageify(text)
+      UICtrl.UIVars.textPreview.style.backgroundColor = UICtrl.UIVars.backgroundColor.value
+
+      UICtrl.UIVars.textPreview.style.color = UICtrl.UIVars.textColor.value
+
+      UICtrl.UIVars.textPreview.style.lineHeight = UICtrl.UIVars.lineHeight.value + 'rem'
+
+      if (text.length == 0) {
+
+        UICtrl.UIVars.textPreview.innerHTML = "This is the preview of text you typed..."
+
+      } else {
+
+        UICtrl.UIVars.textPreview.innerHTML = SpecialCtrl.imageify(text)
+
+      }
 
     }
+
+    parseText()
+
   }
 
   const firstInit = function () {
