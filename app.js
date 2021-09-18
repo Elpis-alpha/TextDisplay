@@ -2184,7 +2184,11 @@ const UICtrl = (function () {
     textColor: findElement('#form-text-color'),
     showOther: findElement('#show-other'),
     fontType: findElement('#form-font-type'),
+    fontSize: findElement('#form-font-size'),
     lineHeight: findElement('#form-lineheight'),
+    formWidth: findElement('#form-width'),
+    textAligment: findElement('#form-text-align'),
+    CSSFont: findElement('#put-your-fonts-in-me'),
   }
 
   return {
@@ -2339,8 +2343,6 @@ const App = (function (UICtrl, APICtrl, GlobalCtrl, SpecialCtrl, WebSocketCtrl, 
 
             const fontURL = URL.createObjectURL(fontitem)
 
-            console.log(fontURL);
-
             UICtrl.UIVars.fontType.dataset.fontlink = fontURL
 
             MessageCtrl.sendMiniMessage('Font Changed', 1000)
@@ -2362,6 +2364,8 @@ const App = (function (UICtrl, APICtrl, GlobalCtrl, SpecialCtrl, WebSocketCtrl, 
         MessageCtrl.sendXMessage(form)
 
       } else {
+
+        UICtrl.UIVars.fontType.dataset.fontlink = UICtrl.UIVars.fontType.value
 
         parseText()
 
@@ -2388,6 +2392,24 @@ const App = (function (UICtrl, APICtrl, GlobalCtrl, SpecialCtrl, WebSocketCtrl, 
     })
 
     UICtrl.UIVars.lineHeight.addEventListener('input', (e) => {
+
+      parseText()
+
+    })
+
+    UICtrl.UIVars.textAligment.addEventListener('input', (e) => {
+
+      parseText()
+
+    })
+
+    UICtrl.UIVars.formWidth.addEventListener('input', (e) => {
+
+      parseText()
+
+    })
+
+    UICtrl.UIVars.fontSize.addEventListener('input', (e) => {
 
       parseText()
 
@@ -2788,11 +2810,34 @@ const App = (function (UICtrl, APICtrl, GlobalCtrl, SpecialCtrl, WebSocketCtrl, 
       text = text.replaceAll('(`+li+`)', '<ul><li>')
       text = text.replaceAll('(`-li-`)', '</li></ul>')
 
-      UICtrl.UIVars.textPreview.style.backgroundColor = UICtrl.UIVars.backgroundColor.value
+      UICtrl.UIVars.textPreview.parentElement.style.backgroundColor = UICtrl.UIVars.backgroundColor.value
 
       UICtrl.UIVars.textPreview.style.color = UICtrl.UIVars.textColor.value
 
       UICtrl.UIVars.textPreview.style.lineHeight = UICtrl.UIVars.lineHeight.value + 'rem'
+
+      UICtrl.UIVars.textPreview.style.fontSize = UICtrl.UIVars.fontSize.value + 'rem'
+
+      UICtrl.UIVars.textPreview.style.width = UICtrl.UIVars.formWidth.value + '%'
+
+      UICtrl.UIVars.textPreview.style.alignItems = UICtrl.UIVars.textAligment.value
+
+      UICtrl.UIVars.CSSFont.innerHTML = `
+        @font-face{
+          font-family: 'VERX';
+          src: url("${UICtrl.UIVars.fontType.dataset.fontlink}");
+        }
+    
+        div.preview-text > div.the-preview{
+          font-family: VERX;
+        }
+      `
+
+      if (parseFloat(UICtrl.UIVars.fontSize.value) > parseFloat(UICtrl.UIVars.lineHeight.value)) {
+
+        UICtrl.UIVars.textPreview.style.lineHeight = (parseFloat(UICtrl.UIVars.fontSize.value) + .4) + 'rem'
+
+      }
 
       if (text.length == 0) {
 

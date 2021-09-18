@@ -10,6 +10,8 @@
   <link rel="stylesheet" href="style.css">
   <script defer src="app.js"></script>
 
+  <style id="put-your-fonts-in-me"></style>
+
 </head>
 
 <body>
@@ -141,16 +143,26 @@
 
               <label for="font-type" class="small-label">Font:</label>
 
-              <select name="" id="form-font-type" data-fontLink="">
-                <option value="OldE">Old English</option>
-                <option value="Harrington">Harrington</option>
-                <option value="Gothic">Gothic</option>
-                <option value="Cambria">Cambria</option>
-                <option value="Times">Times New Roman</option>
-                <option value="Gothic">Gothic</option>
-                <option value="PoorR">Poor Richard</option>
+              <select name="" id="form-font-type" data-fontLink="assets/fonts/HARNGTON.TTF">
+
+                <option value="assets/fonts/old_eng.ttf">Old English</option>
+
+                <option value="assets/fonts/HARNGTON.TTF" selected>Harrington</option>
+
+                <option value="assets/fonts/cambria.ttf">Cambria</option>
+
+                <option value="assets/fonts/times.ttf">Times New Roman</option>
+
+                <option value="assets/fonts/tahoma.ttf">Tahoma</option>
+
+                <option value="assets/fonts/franklin_gothic.ttf">Gothic</option>
+
+                <option value="assets/fonts/poor_richard.ttf">Poor Richard</option>
+
                 <option value="Google">Use Google Font</option>
+
                 <option value="Upload">Upload your font</option>
+
               </select>
 
             </div>
@@ -195,9 +207,9 @@
 
                 <div class="form-element">
 
-                  <label for="form-lineheight" class="small-label">Width(%):</label>
+                  <label for="form-width" class="small-label">Width(%):</label>
 
-                  <input type="number" id="form-lineheight" value="80">
+                  <input type="number" id="form-width" value="80">
 
                 </div>
 
@@ -213,13 +225,12 @@
 
                 <div class="form-element">
 
-                  <label for="form-text-align" class="small-label">Font:</label>
+                  <label for="form-text-align" class="small-label">Allignment:</label>
 
                   <select name="" id="form-text-align">
-                    <option value="Left">Left</option>
-                    <option value="Right">Right</option>
-                    <option selected value="Center">Center</option>
-                    <option value="Justify">Justify</option>
+                    <option value="flex-start">Left</option>
+                    <option value="flex-end">Right</option>
+                    <option selected value="center">Center</option>
                   </select>
 
                 </div>

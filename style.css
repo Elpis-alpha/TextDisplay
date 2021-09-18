@@ -703,9 +703,9 @@ div.preview-text > div.the-preview{
   white-space: pre-wrap;
   display: flex;
   flex-direction: column;
-  width: 100%;
-  align-items: center;
+  margin: auto;
   justify-content: center;
+  word-break: break-word;
 }
 
 div.preview-text > div.the-preview blockquote{
