@@ -1503,6 +1503,30 @@ const SpecialCtrl = (function () {
 
   }
 
+  const requestFullScreen = element => {
+
+    var requestMethod = element.requestFullScreen || element.webkitRequestFullScreen || element.mozRequestFullScreen || element.msRequestFullscreen;
+
+    if (requestMethod) {
+
+      requestMethod.call(element);
+
+    } else if (typeof window.ActiveXObject !== "undefined") { // IE work
+
+      var wscript = new ActiveXObject("WScript.Shell");
+
+      if (wscript !== null) {
+
+        wscript.SendKeys("{F11}");
+
+      }
+
+    }
+
+    // document.exitFullscreen()  Use this to exit
+  }
+
+
   return {
     randomAmong: (num1, num2) => randomAmong(num1, num2),
 
@@ -1515,6 +1539,8 @@ const SpecialCtrl = (function () {
     urlify: (text) => urlify(text),
 
     imageify: (text) => imageify(text),
+
+    requestFullScreen: (element) => requestFullScreen(element),
 
     copyText: (text) => copyText(text),
 
@@ -1533,7 +1559,6 @@ const SpecialCtrl = (function () {
     addLetters: (phrase, element, interval, toNfro, end) => addLetters(phrase, element, interval, toNfro, end),
 
     togglePassword: (passwordInput, toggler, state) => togglePassword(passwordInput, toggler, state),
-
   }
 
 })()
@@ -2145,8 +2170,9 @@ const UICtrl = (function () {
   const UIVars = {
 
     // Rest Elements
-    body: findElement('body'),
     html: findElement('html'),
+    body: findElement('body'),
+    main: findElement('main'),
 
     // Message
     miniMessageHolder: findElement('.mini-message-holder'),
@@ -2189,6 +2215,9 @@ const UICtrl = (function () {
     formWidth: findElement('#form-width'),
     textAligment: findElement('#form-text-align'),
     CSSFont: findElement('#put-your-fonts-in-me'),
+
+    sendPreview: findElement('.send-preview'),
+    textDisplay: findElement('.text-display'),
   }
 
   return {
@@ -2779,6 +2808,32 @@ const App = (function (UICtrl, APICtrl, GlobalCtrl, SpecialCtrl, WebSocketCtrl, 
 
     })
 
+    UICtrl.UIVars.sendPreview.addEventListener('click', e => {
+
+      e.preventDefault();
+
+      parseText()
+
+      UICtrl.removeClass(UICtrl.UIVars.main, 'hide-text-display')
+
+      UICtrl.addClass(UICtrl.UIVars.main, 'show-text-display')
+
+      SpecialCtrl.requestFullScreen(document.body.parentElement)
+
+      MessageCtrl.sendMiniMessage('Double Click to exit', 1000)
+
+    })
+
+    document.addEventListener('dblclick', e => {
+
+      UICtrl.removeClass(UICtrl.UIVars.main, 'show-text-display')
+
+      UICtrl.addClass(UICtrl.UIVars.main, 'hide-text-display')
+
+      document.exitFullscreen()
+
+    })
+
     UICtrl.UIVars.textInput.addEventListener('input', () => parseText())
 
 
@@ -2801,7 +2856,7 @@ const App = (function (UICtrl, APICtrl, GlobalCtrl, SpecialCtrl, WebSocketCtrl, 
       text = text.replaceAll('(`+st+`)', '<span style="text-decoration: line-through;">')
       text = text.replaceAll('(`-st-`)', '</span>')
 
-      text = text.replaceAll('(`+bq+`)', '<blockquote class="prev-blockquotes">')
+      text = text.replaceAll('(`+bq+`)', '<blockquote style="border-left-color: ' + UICtrl.UIVars.textColor.value + ' " class="prev-blockquotes">')
       text = text.replaceAll('(`-bq-`)', '</blockquote>')
 
       text = text.replaceAll('(`+cd+`)', '<code class="prev-code">')
@@ -2809,6 +2864,9 @@ const App = (function (UICtrl, APICtrl, GlobalCtrl, SpecialCtrl, WebSocketCtrl, 
 
       text = text.replaceAll('(`+li+`)', '<ul><li>')
       text = text.replaceAll('(`-li-`)', '</li></ul>')
+
+
+      // Settings for the preview plane
 
       UICtrl.UIVars.textPreview.parentElement.style.backgroundColor = UICtrl.UIVars.backgroundColor.value
 
@@ -2820,15 +2878,19 @@ const App = (function (UICtrl, APICtrl, GlobalCtrl, SpecialCtrl, WebSocketCtrl, 
 
       UICtrl.UIVars.textPreview.style.width = UICtrl.UIVars.formWidth.value + '%'
 
-      UICtrl.UIVars.textPreview.style.alignItems = UICtrl.UIVars.textAligment.value
+      UICtrl.UIVars.textPreview.style.textAlign = UICtrl.UIVars.textAligment.value
 
       UICtrl.UIVars.CSSFont.innerHTML = `
         @font-face{
           font-family: 'VERX';
           src: url("${UICtrl.UIVars.fontType.dataset.fontlink}");
         }
-    
+
         div.preview-text > div.the-preview{
+          font-family: VERX;
+        }
+    
+        div.text-display-holder > div.text-display{
           font-family: VERX;
         }
       `
@@ -2846,6 +2908,37 @@ const App = (function (UICtrl, APICtrl, GlobalCtrl, SpecialCtrl, WebSocketCtrl, 
       } else {
 
         UICtrl.UIVars.textPreview.innerHTML = SpecialCtrl.imageify(text)
+
+      }
+
+
+      // Settings for the display plane
+
+      UICtrl.UIVars.textDisplay.parentElement.style.backgroundColor = UICtrl.UIVars.backgroundColor.value
+
+      UICtrl.UIVars.textDisplay.style.color = UICtrl.UIVars.textColor.value
+
+      UICtrl.UIVars.textDisplay.style.lineHeight = UICtrl.UIVars.lineHeight.value + 'rem'
+
+      UICtrl.UIVars.textDisplay.style.fontSize = UICtrl.UIVars.fontSize.value + 'rem'
+
+      UICtrl.UIVars.textDisplay.style.width = UICtrl.UIVars.formWidth.value + '%'
+
+      UICtrl.UIVars.textDisplay.style.textAlign = UICtrl.UIVars.textAligment.value
+
+      if (parseFloat(UICtrl.UIVars.fontSize.value) > parseFloat(UICtrl.UIVars.lineHeight.value)) {
+
+        UICtrl.UIVars.textDisplay.style.lineHeight = (parseFloat(UICtrl.UIVars.fontSize.value) + .4) + 'rem'
+
+      }
+
+      if (text.length == 0) {
+
+        UICtrl.UIVars.textDisplay.innerHTML = "This is the preview of text you typed..."
+
+      } else {
+
+        UICtrl.UIVars.textDisplay.innerHTML = SpecialCtrl.imageify(text)
 
       }
 

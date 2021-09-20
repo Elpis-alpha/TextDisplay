@@ -4,10 +4,13 @@
 <head>
 
   <meta charset="UTF-8">
+
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <title>Title</title>
+  <title>Text Styling by Elpis</title>
+
   <link rel="stylesheet" href="style.css">
+
   <script defer src="app.js"></script>
 
   <style id="put-your-fonts-in-me"></style>
@@ -22,13 +25,13 @@
 
       <nav>
 
-        Elpis Text Styling and Display
+        Elpis Text Styling
 
       </nav>
 
     </div>
 
-    <main>
+    <main class="hide-text-display">
 
       <div class="main-content">
 
@@ -38,7 +41,7 @@
           &nbsp; &nbsp; Have you ever had the need to style a particular sentence and
           screenshot it? Well today your troubles are over because by using the form below, you can easily style any
           text and have it displayed in full screen mode. Enter your desired text in the form below and have it styled
-          as you see fit
+          as you see fit. You can check the preview at the bottom of the screen.
 
         </div>
 
@@ -155,7 +158,9 @@
 
                 <option value="assets/fonts/tahoma.ttf">Tahoma</option>
 
-                <option value="assets/fonts/franklin_gothic.ttf">Gothic</option>
+                <option value="assets/fonts/franklin_gothic.ttf">Franklin</option>
+
+                <option value="assets/fonts/gothice_.ttf">Gothic</option>
 
                 <option value="assets/fonts/poor_richard.ttf">Poor Richard</option>
 
@@ -228,8 +233,8 @@
                   <label for="form-text-align" class="small-label">Allignment:</label>
 
                   <select name="" id="form-text-align">
-                    <option value="flex-start">Left</option>
-                    <option value="flex-end">Right</option>
+                    <option value="left">Left</option>
+                    <option value="right">Right</option>
                     <option selected value="center">Center</option>
                   </select>
 
@@ -255,9 +260,16 @@
 
           <div class="label">Preview Text</div>
 
-          <div class="the-preview">This is the text you typed...</div>
+          <div class="the-preview"></div>
 
         </div>
+
+      </div>
+
+
+      <div class="text-display-holder">
+
+        <div class="text-display"></div>
 
       </div>
 
