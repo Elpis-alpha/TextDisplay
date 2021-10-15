@@ -2820,7 +2820,7 @@ const App = (function (UICtrl, APICtrl, GlobalCtrl, SpecialCtrl, WebSocketCtrl, 
 
       SpecialCtrl.requestFullScreen(document.body.parentElement)
 
-      MessageCtrl.sendMiniMessage('Double Click to exit', 1000)
+      MessageCtrl.sendMiniMessage('Double Click to exit', 2000)
 
     })
 
